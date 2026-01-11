@@ -1,19 +1,19 @@
-export default function Home() {
+export default function NotFound() {
   return (
     <div style={{ 
       fontFamily: 'Arial, sans-serif',
       textAlign: 'center',
       padding: '50px 20px',
-      background: 'linear-gradient(135deg, #7f23b8 0%, #0E72DD 100%)',
+      background: '#f5f5f5',
       minHeight: '100vh',
-      color: '#fff',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>RUS Link Service</h1>
-      <p style={{ fontSize: '18px' }}>API home</p>
+      <h1 style={{ fontSize: '32px', marginBottom: '20px', color: '#333' }}>404 - Not Found</h1>
+      <p style={{ fontSize: '18px', color: '#666' }}>The requested page could not be found.</p>
     </div>
   );
 }
+
