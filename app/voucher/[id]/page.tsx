@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const ASSET_URL = process.env.ASSET_URL || 'https://rus-assets.fra1.cdn.digitaloceanspaces.com';
   const BASE_URL = process.env.BASE_URL || 'https://link.renturstatus.com';
   const imageUrl = voucher.image ? `${ASSET_URL}/images/${voucher.image}` : '';
+  const faviconUrl = `${BASE_URL}/favicon.ico`;
 
   return {
     title: voucher.title,
@@ -41,14 +42,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     openGraph: {
       title: voucher.title,
       description: voucher.description || voucher.title,
-      images: imageUrl ? [imageUrl] : [],
+      images: imageUrl ? [imageUrl] : [faviconUrl],
       url: `${BASE_URL}/voucher/${id}`,
     },
     twitter: {
       card: 'summary_large_image',
       title: voucher.title,
       description: voucher.description || voucher.title,
-      images: imageUrl ? [imageUrl] : [],
+      images: imageUrl ? [imageUrl] : [faviconUrl],
     },
   };
 }
