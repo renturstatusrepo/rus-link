@@ -38,21 +38,31 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const BASE_URL = process.env.BASE_URL || 'https://link.renturstatus.com';
   const imageUrl = coupon.image ? `${ASSET_URL}/images/${coupon.image}` : '';
   const faviconUrl = `${BASE_URL}/favicon.ico`;
+  const ogImageUrl = imageUrl || faviconUrl;
 
   return {
     title,
     description: coupon.description || title,
     openGraph: {
+      type: 'website',
       title,
       description: coupon.description || title,
-      images: imageUrl ? [imageUrl] : [faviconUrl],
       url: `${BASE_URL}/cp/${id}`,
+      siteName: 'RUS - Rent Ur Status',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description: coupon.description || title,
-      images: imageUrl ? [imageUrl] : [faviconUrl],
+      images: [ogImageUrl],
     },
   };
 }

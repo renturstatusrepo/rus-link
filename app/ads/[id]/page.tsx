@@ -36,21 +36,31 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const BASE_URL = process.env.BASE_URL || 'https://link.renturstatus.com';
   const thumbnailUrl = campaign.thumbnail ? `${ASSET_URL}/images/${campaign.thumbnail}` : '';
   const faviconUrl = `${BASE_URL}/favicon.ico`;
+  const imageUrl = thumbnailUrl || faviconUrl;
 
   return {
     title: campaign.title,
     description: campaign.description || campaign.title,
     openGraph: {
+      type: 'website',
       title: campaign.title,
       description: campaign.description || campaign.title,
-      images: thumbnailUrl ? [thumbnailUrl] : [faviconUrl],
       url: `${BASE_URL}/ads/${id}`,
+      siteName: 'RUS - Rent Ur Status',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: campaign.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: campaign.title,
       description: campaign.description || campaign.title,
-      images: thumbnailUrl ? [thumbnailUrl] : [faviconUrl],
+      images: [imageUrl],
     },
   };
 }
