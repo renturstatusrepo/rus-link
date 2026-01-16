@@ -81,6 +81,10 @@ export default function CampaignPage({
   const thumbnailUrl = thumbnail ? `${ASSET_URL}/images/${thumbnail}` : '';
   const contentUrl = content ? `${ASSET_URL}/${option === 'video' ? 'videos' : 'images'}/${content}` : '';
   const displayImage = thumbnailUrl || contentUrl;
+  
+  // Ensure title and description are strings, not null
+  const safeTitle = title || 'Campaign';
+  const safeDescription = description && typeof description === 'string' ? description.trim() : '';
 
   const handleOpenApp = () => {
     window.location.href = `russm://c/${id}`;
@@ -105,7 +109,7 @@ export default function CampaignPage({
               ) : (
                 <img
                   src={displayImage}
-                  alt={title}
+                  alt={safeTitle}
                   className="w-full h-full object-cover"
                 />
               )}
@@ -115,12 +119,12 @@ export default function CampaignPage({
           {/* Content Section */}
           <div className="p-6 md:p-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {title}
+              {safeTitle}
             </h1>
             
-            {description && (
+            {safeDescription && (
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                {description}
+                {safeDescription}
               </p>
             )}
 

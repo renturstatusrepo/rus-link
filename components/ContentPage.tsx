@@ -75,6 +75,10 @@ export default function ContentPage({
   }, [deepLinkPath]);
 
   const imageUrl = image ? `${ASSET_URL}/images/${image}` : '';
+  
+  // Ensure title and description are strings, not null
+  const safeTitle = title || 'Content';
+  const safeDescription = description && typeof description === 'string' ? description.trim() : '';
 
   const handleOpenApp = () => {
     window.location.href = `russm://${deepLinkPath}`;
@@ -89,7 +93,7 @@ export default function ContentPage({
             <div className="relative w-full aspect-video bg-gray-100">
               <img
                 src={imageUrl}
-                alt={title}
+                alt={safeTitle}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -98,12 +102,12 @@ export default function ContentPage({
           {/* Content Section */}
           <div className="p-6 md:p-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {title}
+              {safeTitle}
             </h1>
             
-            {description && (
+            {safeDescription && (
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                {description}
+                {safeDescription}
               </p>
             )}
 
