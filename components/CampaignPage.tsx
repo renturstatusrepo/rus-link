@@ -10,6 +10,7 @@ interface CampaignPageProps {
   thumbnail?: string;
   content?: string;
   option?: string;
+  refCode?: string;
 }
 
 export default function CampaignPage({
@@ -19,24 +20,25 @@ export default function CampaignPage({
   thumbnail,
   content,
   option = 'image',
+  refCode,
 }: CampaignPageProps) {
   useEffect(() => {
     // Deep link script
-    const deepLink = `russm://c/${id}`;
+    const deepLink = `russm://c/${id}${refCode ? `?ref=${refCode}` : ''}`;
     const iosAppStore = 'https://apps.apple.com/ng/app/rus-speed-marketing-platform/id6503910431';
     const androidPlayStore = 'https://play.google.com/store/apps/details?id=com.renturstatus.rus';
-    
+
     const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
     const isAndroid = /Android/.test(ua);
     const isMobile = isIOS || isAndroid;
-    
+
     if (isMobile) {
       const start = Date.now();
       let timeout: NodeJS.Timeout;
-      
+
       window.location.href = deepLink;
-      
+
       timeout = setTimeout(() => {
         if (Date.now() - start < 2000) {
           if (isIOS) {
@@ -46,21 +48,21 @@ export default function CampaignPage({
           }
         }
       }, 1500);
-      
+
       const handleVisibilityChange = () => {
         if (document.hidden) {
           clearTimeout(timeout);
         }
       };
-      
+
       document.addEventListener('visibilitychange', handleVisibilityChange);
-      
+
       return () => {
         clearTimeout(timeout);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
     }
-    
+
     // Show/hide appropriate download buttons
     const iosBtn = document.getElementById('ios-download');
     const androidBtn = document.getElementById('android-download');
@@ -81,13 +83,13 @@ export default function CampaignPage({
   const thumbnailUrl = thumbnail ? `${ASSET_URL}/images/${thumbnail}` : '';
   const contentUrl = content ? `${ASSET_URL}/${option === 'video' ? 'videos' : 'images'}/${content}` : '';
   const displayImage = thumbnailUrl || contentUrl;
-  
+
   // Ensure title and description are strings, not null
   const safeTitle = title || 'Campaign';
   const safeDescription = description && typeof description === 'string' ? description.trim() : '';
 
   const handleOpenApp = () => {
-    window.location.href = `russm://c/${id}`;
+    window.location.href = `russm://c/${id}${refCode ? `?ref=${refCode}` : ''}`;
   };
 
   return (
@@ -121,7 +123,7 @@ export default function CampaignPage({
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {safeTitle}
             </h1>
-            
+
             {safeDescription && (
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
                 {safeDescription}

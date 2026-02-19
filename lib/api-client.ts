@@ -80,11 +80,11 @@ async function fetchFromApi<T>(endpoint: string): Promise<T | null> {
     }
 
     const result: ApiResponse<T> = await response.json();
-    
+
     if (result.success && result.data) {
       return result.data;
     }
-    
+
     return null;
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
@@ -95,21 +95,21 @@ async function fetchFromApi<T>(endpoint: string): Promise<T | null> {
 export async function getCampaign(idOrSlug: string): Promise<Campaign | null> {
   // Try by ID first, then by slug
   let campaign = await fetchFromApi<Campaign>(`/campaign/${idOrSlug}`);
-  
+
   if (!campaign) {
     campaign = await fetchFromApi<Campaign>(`/campaign/slug/${idOrSlug}`);
   }
-  
+
   return campaign;
 }
 
 export async function getProduct(idOrSlug: string): Promise<Product | null> {
   let product = await fetchFromApi<Product>(`/product/${idOrSlug}`);
-  
+
   if (!product) {
     product = await fetchFromApi<Product>(`/product/slug/${idOrSlug}`);
   }
-  
+
   return product;
 }
 
@@ -131,12 +131,29 @@ export async function getVoucher(id: string): Promise<Voucher | null> {
 
 export async function getCoupon(idOrSlug: string): Promise<Coupon | null> {
   let coupon = await fetchFromApi<Coupon>(`/coupon/${idOrSlug}`);
-  
+
   if (!coupon) {
     coupon = await fetchFromApi<Coupon>(`/coupon/slug/${idOrSlug}`);
   }
-  
+
   return coupon;
+}
+
+export async function trackReferralClick(refCode: string): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/campaign/referral/${refCode}/click`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error(`Error tracking referral click:`, error);
+    return false;
+  }
 }
 
 export { ASSET_URL, BASE_URL };

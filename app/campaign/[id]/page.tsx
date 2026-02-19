@@ -1,13 +1,28 @@
-import { getCampaign } from '@/lib/api-client';
+import { getCampaign, trackReferralClick } from '@/lib/api-client';
 import { notFound } from 'next/navigation';
 import CampaignPage from '@/components/CampaignPage';
 
-export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({
+  params,
+  searchParams
+}: {
+  params: Promise<{ id: string }>,
+  searchParams: Promise<{ ref?: string }>
+}) {
   const { id } = await params;
+  const { ref } = await searchParams;
+
   const campaign = await getCampaign(id);
-  
+
   if (!campaign) {
     notFound();
+  }
+
+  // Track referral click if ref code is present
+  if (ref) {
+    trackReferralClick(ref).catch(err => {
+      console.error('[CampaignPage] Failed to track referral click:', err);
+    });
   }
 
   return (
@@ -18,6 +33,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       thumbnail={campaign.thumbnail}
       content={campaign.content}
       option={campaign.option}
+      refCode={ref}
     />
   );
 }
@@ -25,7 +41,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const campaign = await getCampaign(id);
-  
+
   if (!campaign) {
     return {
       title: 'Campaign Not Found',
