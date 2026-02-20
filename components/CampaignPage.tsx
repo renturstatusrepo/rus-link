@@ -11,6 +11,14 @@ interface CampaignPageProps {
   content?: string;
   option?: string;
   refCode?: string;
+  creator?: {
+    name: string;
+    photo?: string;
+  };
+  business?: {
+    name: string;
+    logo?: string;
+  };
 }
 
 export default function CampaignPage({
@@ -21,6 +29,8 @@ export default function CampaignPage({
   content,
   option = 'image',
   refCode,
+  creator,
+  business,
 }: CampaignPageProps) {
   useEffect(() => {
     // Deep link script
@@ -96,6 +106,33 @@ export default function CampaignPage({
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          {/* Creator/Business Header */}
+          <div className="p-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full overflow-hidden border border-purple-100 bg-white shadow-sm">
+              {(business?.logo || creator?.photo) ? (
+                <img
+                  src={`${ASSET_URL}/images/${business?.logo || creator?.photo}`}
+                  alt={business?.name || creator?.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-purple-100 flex items-center justify-center">
+                  <span className="text-purple-600 font-bold text-lg">
+                    {(business?.name || creator?.name || 'C').charAt(0)}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">
+                {business?.name || creator?.name}
+              </p>
+              <p className="text-xs text-purple-600 font-medium tracking-wide border-purple-200 border bg-purple-50 px-1.5 py-0.5 rounded inline-block mt-0.5">
+                VERIFIED ADVERTISER
+              </p>
+            </div>
+          </div>
+
           {/* Image/Video Section */}
           {displayImage && (
             <div className="relative w-full aspect-video bg-gray-100">

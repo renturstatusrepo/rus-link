@@ -3,6 +3,12 @@ const API_BASE_URL = process.env.API_URL || 'http://localhost:3000/api';
 const ASSET_URL = process.env.ASSET_URL || 'https://rus-assets.fra1.cdn.digitaloceanspaces.com';
 const BASE_URL = process.env.BASE_URL || 'https://link.renturstatus.com';
 
+export interface Business {
+  id: string;
+  name: string;
+  logo?: string;
+}
+
 export interface Campaign {
   id: string;
   title: string;
@@ -11,6 +17,8 @@ export interface Campaign {
   thumbnail?: string;
   option?: string;
   slug?: string;
+  users?: User;
+  businesses?: Business;
 }
 
 export interface Product {

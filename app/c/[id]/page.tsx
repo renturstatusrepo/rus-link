@@ -34,6 +34,8 @@ export default async function Page({
       content={campaign.content}
       option={campaign.option}
       refCode={ref}
+      creator={campaign.users}
+      business={campaign.businesses}
     />
   );
 }
@@ -54,12 +56,15 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const faviconUrl = `${BASE_URL}/favicon.ico`;
   const imageUrl = thumbnailUrl || faviconUrl;
 
+  const displayName = campaign.businesses?.name || campaign.users?.name || 'RUS';
+  const pageTitle = `${campaign.title} - ${displayName}`;
+
   return {
-    title: campaign.title,
+    title: pageTitle,
     description: campaign.description || campaign.title,
     openGraph: {
       type: 'website',
-      title: campaign.title,
+      title: pageTitle,
       description: campaign.description || campaign.title,
       url: `${BASE_URL}/c/${id}`,
       siteName: 'RUS - Rent Ur Status',
