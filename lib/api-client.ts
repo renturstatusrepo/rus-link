@@ -164,5 +164,23 @@ export async function trackReferralClick(refCode: string): Promise<boolean> {
   }
 }
 
+export async function trackCampaignClick(id: string, refCode?: string): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/campaign/track-click`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, refCode }),
+      cache: 'no-store',
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error(`Error tracking campaign click:`, error);
+    return false;
+  }
+}
+
 export { ASSET_URL, BASE_URL };
 

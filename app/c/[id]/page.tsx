@@ -1,4 +1,4 @@
-import { getCampaign, trackReferralClick } from '@/lib/api-client';
+import { getCampaign, trackReferralClick, trackCampaignClick } from '@/lib/api-client';
 import { notFound } from 'next/navigation';
 import CampaignPage from '@/components/CampaignPage';
 
@@ -18,7 +18,12 @@ export default async function Page({
     notFound();
   }
 
-  // Track referral click if ref code is present
+  // Track the general campaign click
+  trackCampaignClick(campaign.id, ref).catch(err => {
+    console.error('[CampaignPage] Failed to track campaign click:', err);
+  });
+
+  // Track referral click specifically if ref code is present
   if (ref) {
     trackReferralClick(ref).catch(err => {
       console.error('[CampaignPage] Failed to track referral click:', err);
