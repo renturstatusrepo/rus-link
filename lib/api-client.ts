@@ -68,6 +68,15 @@ export interface Coupon {
   image?: string;
 }
 
+export interface Post {
+  id: string;
+  title: string;
+  description?: string;
+  content?: string;
+  option?: string;
+  user_id?: string;
+}
+
 interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -145,6 +154,10 @@ export async function getCoupon(idOrSlug: string): Promise<Coupon | null> {
   }
 
   return coupon;
+}
+
+export async function getPost(id: string): Promise<Post | null> {
+  return fetchFromApi<Post>(`/post/${id}`);
 }
 
 export async function trackReferralClick(refCode: string): Promise<boolean> {
