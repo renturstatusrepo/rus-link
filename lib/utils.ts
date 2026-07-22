@@ -62,6 +62,102 @@ export function generateDeepLinkScript(deepLinkPath: string): string {
   `.trim();
 }
 
+export function parseImageUrl(
+  imageInput?: string | string[] | null,
+  folder: string = 'images'
+): string {
+  if (!imageInput) return '';
+
+  let target: string = '';
+
+  if (Array.isArray(imageInput)) {
+    target = imageInput.find(img => typeof img === 'string' && img.trim().length > 0) || '';
+  } else if (typeof imageInput === 'string') {
+    const trimmed = imageInput.trim();
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          target = parsed.find(img => typeof img === 'string' && img.trim().length > 0) || '';
+        }
+      } catch {
+        target = trimmed;
+      }
+    } else {
+      target = trimmed;
+    }
+  }
+
+  if (!target) return '';
+
+  if (target.startsWith('http://') || target.startsWith('https://')) {
+    return target;
+  }
+
+  const cleanPath = target.startsWith('/') ? target.slice(1) : target;
+
+  if (cleanPath.startsWith(`${folder}/`)) {
+    return `${ASSET_URL}/${cleanPath}`;
+  }
+
+  return `${ASSET_URL}/${folder}/${cleanPath}`;
+}
+
+export function parseImageUrls(
+  imageInput?: string | string[] | null,
+  imagesInput?: string[] | null,
+  folder: string = 'images'
+): string[] {
+  const result: string[] = [];
+
+  const processItem = (item: string) => {
+    const trimmed = item.trim();
+    if (!trimmed) return;
+
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          parsed.forEach(sub => {
+            if (typeof sub === 'string') processItem(sub);
+          });
+          return;
+        }
+      } catch {}
+    }
+
+    let url = '';
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      url = trimmed;
+    } else {
+      const cleanPath = trimmed.startsWith('/') ? trimmed.slice(1) : trimmed;
+      if (cleanPath.startsWith(`${folder}/`)) {
+        url = `${ASSET_URL}/${cleanPath}`;
+      } else {
+        url = `${ASSET_URL}/${folder}/${cleanPath}`;
+      }
+    }
+
+    if (url && !result.includes(url)) {
+      result.push(url);
+    }
+  };
+
+  if (imagesInput && Array.isArray(imagesInput) && imagesInput.length > 0) {
+    imagesInput.forEach(img => typeof img === 'string' && processItem(img));
+  }
+
+  if (result.length === 0 && imageInput) {
+    if (Array.isArray(imageInput)) {
+      imageInput.forEach(img => typeof img === 'string' && processItem(img));
+    } else if (typeof imageInput === 'string') {
+      processItem(imageInput);
+    }
+  }
+
+  return result;
+}
+
 export function generateContentHTML(
   title: string,
   description: string | undefined,
@@ -69,7 +165,7 @@ export function generateContentHTML(
   url: string,
 ): string {
   const desc = description || title;
-  const imgUrl = image ? `${ASSET_URL}/images/${image}` : '';
+  const imgUrl = parseImageUrl(image);
   const deepLinkScript = generateDeepLinkScript(url);
 
   return `<!DOCTYPE html>

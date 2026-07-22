@@ -1,6 +1,7 @@
 import { getProduct } from '@/lib/api-client';
 import { notFound } from 'next/navigation';
 import ContentPage from '@/components/ContentPage';
+import { parseImageUrl } from '@/lib/utils';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -16,6 +17,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       title={product.title}
       description={product.description}
       image={product.image}
+      images={product.images}
+      price={product.price}
       deepLinkPath={`p/${id}`}
     />
   );
@@ -31,9 +34,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
   }
 
-  const ASSET_URL = process.env.ASSET_URL || 'https://rus-assets.fra1.cdn.digitaloceanspaces.com';
   const BASE_URL = process.env.BASE_URL || 'https://link.renturstatus.com';
-  const imageUrl = product.image ? `${ASSET_URL}/images/${product.image}` : '';
+  const imageUrl = parseImageUrl(product.images || product.image);
   const faviconUrl = `${BASE_URL}/favicon.ico`;
   const ogImageUrl = imageUrl || faviconUrl;
 
@@ -63,4 +65,5 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     },
   };
 }
+
 
