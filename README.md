@@ -191,4 +191,4 @@ This Next.js implementation replaces the previous Rust-based link service (`rus-
 
 ## License
 
-Part of the RUS (RentUrStatus) platform.
+Part of the RUS (RentUrStatus) platform..
