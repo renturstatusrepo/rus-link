@@ -1,11 +1,11 @@
-import { getProduct } from '@/lib/api-client';
+import { getProduct, Product } from '@/lib/api-client';
 import { notFound } from 'next/navigation';
 import ContentPage from '@/components/ContentPage';
 import { parseImageUrl } from '@/lib/utils';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = await getProduct(id);
+  const product: Product | null = await getProduct(id);
   
   if (!product) {
     notFound();
